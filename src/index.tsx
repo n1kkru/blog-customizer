@@ -1,5 +1,5 @@
 import { createRoot } from 'react-dom/client';
-import { StrictMode, CSSProperties } from 'react';
+import { StrictMode, CSSProperties, useState } from 'react';
 import clsx from 'clsx';
 
 import { Article } from './components/article/Article';
@@ -13,19 +13,32 @@ const domNode = document.getElementById('root') as HTMLDivElement;
 const root = createRoot(domNode);
 
 const App = () => {
+	/*стили сайта*/
+	const [style, setStyle] = useState(defaultArticleState);
+	/*состояние менюшки*/
+	const [open, setOpen] = useState(false);
+	/*ф-ция обновления состояния из компоненты формы*/
+	const updState = (): void => {
+		setOpen((op) => !op);
+	};
+	/*ф-ция обновления стилей страницы*/
+	const updStyle = (value: typeof defaultArticleState): void => {
+		setStyle(value);
+	};
+
 	return (
 		<div
 			className={clsx(styles.main)}
 			style={
 				{
-					'--font-family': defaultArticleState.fontFamilyOption.value,
-					'--font-size': defaultArticleState.fontSizeOption.value,
-					'--font-color': defaultArticleState.fontColor.value,
-					'--container-width': defaultArticleState.contentWidth.value,
-					'--bg-color': defaultArticleState.backgroundColor.value,
+					'--font-family': style.fontFamilyOption.value,
+					'--font-size': style.fontSizeOption.value,
+					'--font-color': style.fontColor.value,
+					'--container-width': style.contentWidth.value,
+					'--bg-color': style.backgroundColor.value,
 				} as CSSProperties
 			}>
-			<ArticleParamsForm />
+			<ArticleParamsForm onClick={updState} state={open} onChange={updStyle} />
 			<Article />
 		</div>
 	);

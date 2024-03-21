@@ -2,17 +2,21 @@ import { Text } from 'components/text';
 
 import styles from './Button.module.scss';
 
-export const Button = ({
-	title,
-	onClick,
-	type,
-}: {
+type ButtonProps = {
 	title: string;
-	onClick?: () => void;
 	type?: React.ButtonHTMLAttributes<HTMLButtonElement>['type'];
-}) => {
+	onClick?(): void;
+};
+
+export const Button = ({ title, onClick, type }: ButtonProps) => {
 	return (
-		<button className={styles.button} type={type} onClick={onClick}>
+		<button
+			className={styles.button}
+			type={type}
+			onClick={(e) => {
+				e.preventDefault();
+				if (onClick) onClick();
+			}}>
 			<Text weight={800} uppercase>
 				{title}
 			</Text>
