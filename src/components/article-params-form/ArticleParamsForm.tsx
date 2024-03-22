@@ -4,8 +4,9 @@ import { ArrowButton } from 'components/arrow-button';
 import { Button } from 'components/button';
 import { Select } from '../select';
 import { RadioGroup } from '../radio-group';
-import { useState } from 'react';
+import { useRef, useState } from 'react';
 import { Separator } from '../separator';
+import { Text } from '../text';
 
 import styles from './ArticleParamsForm.module.scss';
 import {
@@ -16,6 +17,7 @@ import {
 	fontFamilyOptions,
 	fontSizeOptions,
 } from 'src/constants/articleProps';
+import { useClose } from 'src/hooks/useClose';
 
 type ArticleParamsProps = {
 	onClick(): void;
@@ -34,24 +36,37 @@ export const ArticleParamsForm = ({
 	};
 
 	/* кнопка применить*/
-	const handleApplyClick = (): void => {
+	const handleSubmit = (e: React.FormEvent): void => {
+		e.preventDefault();
 		onChange(style);
 	};
 
 	/* кнопка сбросить*/
-	const handleResetClick = (): void => {
+	const handleReset = (e: React.FormEvent): void => {
+		e.preventDefault();
 		setStyle(defaultArticleState);
 		onChange(defaultArticleState);
 	};
 
 	const [style, setStyle] = useState(defaultArticleState);
+	const formRef = useRef<HTMLFormElement>(null);
+	useClose({ isOpen: state, onClose: handleArrowClick, rootRef: formRef });
 
 	return (
 		<>
 			<ArrowButton onClick={handleArrowClick} state={state} />
 
 			<aside className={clsx(styles.container, state && styles.container_open)}>
-				<form className={styles.form}>
+				<form
+					id='paramsForm'
+					className={styles.form}
+					onSubmit={handleSubmit}
+					onReset={handleReset}
+					ref={formRef}>
+					<Text as='h2' size={31} weight={800} uppercase dynamicLite>
+						Задайте параметры
+					</Text>
+
 					<Select
 						title={'Шрифт'}
 						selected={style.fontFamilyOption}
@@ -115,12 +130,8 @@ export const ArticleParamsForm = ({
 					/>
 
 					<div className={styles.bottomContainer}>
-						<Button title='Сбросить' type='reset' onClick={handleResetClick} />
-						<Button
-							title='Применить'
-							type='submit'
-							onClick={handleApplyClick}
-						/>
+						<Button form='paramsForm' title='Сбросить' type='reset' />
+						<Button form='paramsForm' title='Применить' type='submit' />
 					</div>
 				</form>
 			</aside>

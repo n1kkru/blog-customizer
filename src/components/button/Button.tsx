@@ -6,17 +6,12 @@ type ButtonProps = {
 	title: string;
 	type?: React.ButtonHTMLAttributes<HTMLButtonElement>['type'];
 	onClick?(): void;
+	form?: string;
 };
 
-export const Button = ({ title, onClick, type }: ButtonProps) => {
+export const Button = ({ title, type, form }: ButtonProps) => {
 	return (
-		<button
-			className={styles.button}
-			type={type}
-			onClick={(e) => {
-				e.preventDefault();
-				if (onClick) onClick();
-			}}>
+		<button form={form} className={styles.button} type={type}>
 			<Text weight={800} uppercase>
 				{title}
 			</Text>
