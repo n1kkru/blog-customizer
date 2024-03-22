@@ -2,17 +2,16 @@ import { Text } from 'components/text';
 
 import styles from './Button.module.scss';
 
-export const Button = ({
-	title,
-	onClick,
-	type,
-}: {
+type ButtonProps = {
 	title: string;
-	onClick?: () => void;
 	type?: React.ButtonHTMLAttributes<HTMLButtonElement>['type'];
-}) => {
+	onClick?(): void;
+	form?: string;
+};
+
+export const Button = ({ title, type, form }: ButtonProps) => {
 	return (
-		<button className={styles.button} type={type} onClick={onClick}>
+		<button form={form} className={styles.button} type={type}>
 			<Text weight={800} uppercase>
 				{title}
 			</Text>
